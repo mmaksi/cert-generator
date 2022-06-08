@@ -43,12 +43,12 @@ const httpAddNewMember = async (req, res) => {
     !member.startDate ||
     !member.endDate
   ) {
-    res.status(400).json({ error: "required data is missing" });
+    return res.status(400).json({ error: "required data is missing" });
   } else {
     const memberId = uuidv4();
     member = { memberId, ...member };
     await saveMember(member);
-    res.status(201).json(member);
+    return res.status(201).json(member);
   }
 };
 
@@ -79,23 +79,11 @@ const httpEditMember = async (req, res) => {
   }
 };
 
-const httpRegisterMember = async (req, res) => {
-  
-  memberExists
-}
-
-const httpSignInMember = async (req, res) => {
-
-  memberExists
-}
-
 module.exports = {
   httpGetAllMembers,
   httpGetOneMemberById,
   httpGetOneMemberByName,
   httpAddNewMember,
   httpEditMember,
-  httpRegisterMember,
-  httpSignInMember,
 };
 
