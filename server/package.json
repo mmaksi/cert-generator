@@ -12,7 +12,7 @@
     "type": "git",
     "url": "git+https://github.com/markmaksi74/certification-generator-dashboard.git"
   },
-  "author": "",
+  "author": "Mark Maksi",
   "license": "ISC",
   "engines": {
     "node": "14.17.6"

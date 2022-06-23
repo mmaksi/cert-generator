@@ -1,4 +1,4 @@
-require('dotenv').config();
+// require('dotenv').config();
 const http = require('http');
 const app = require('./app');
 const { mongoConnect } = require('./services/mongo');
@@ -15,7 +15,5 @@ async function startServer() {
     console.log(`Go to http://localhost:8000/v1/users`)
   });
 }
-
-
 
 startServer();

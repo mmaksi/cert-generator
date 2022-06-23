@@ -10,14 +10,14 @@ const {
   httpSignInMember
 } = require('./members.controller');
 
-const usersRouter = express.Router();
+const membersRouter = express.Router();
 
-usersRouter.post('/', httpAddNewMember);
-usersRouter.put('/', httpEditMember)
-usersRouter.get('/member', httpGetOneMemberByName)
-usersRouter.get('/', httpGetAllMembers);
-usersRouter.get('/:id', httpGetOneMemberById)
-usersRouter.post('/signup', httpRegisterMember)
-usersRouter.get('/signin', httpSignInMember)
+membersRouter.get('/member', httpGetOneMemberByName)
+membersRouter.get('/', httpGetAllMembers);
+membersRouter.get('/:id', httpGetOneMemberById)
+// membersRouter.get('/signin', httpSignInMember)
+membersRouter.post('/', httpAddNewMember);
+// membersRouter.post('/signup', httpRegisterMember)
+membersRouter.put('/', httpEditMember)
 
-module.exports = usersRouter;
+module.exports = membersRouter;
