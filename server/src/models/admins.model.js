@@ -3,14 +3,14 @@ const bcrypt = require("bcryptjs");
 const salt = bcrypt.genSaltSync(10);
 
 const findAdminByName = async (admin) => {
-  const adminUserName = admin.userName;
-  return await adminsDatabase.findOne({ userName: adminUserName });
+  const adminUserName = admin.username;
+  return await adminsDatabase.findOne({ username: adminUserName });
 };
 
 const registerAdmin = async (admin) => {
-  const { userName, password } = admin;
+  const { username, password } = admin;
   const hashedPassword = hashPassword(password);
-  return await adminsDatabase.create([{ userName, password: hashedPassword }]);
+  return await adminsDatabase.create([{ username, password: hashedPassword }]);
 };
 
 const signInAdmin = async (admin) => {
@@ -19,7 +19,7 @@ const signInAdmin = async (admin) => {
 
   if (existedAdmin === null) {
     existedAdmin = {
-      userName: ".",
+      username: ".",
       password: ".",
     };
   }

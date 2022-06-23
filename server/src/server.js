@@ -12,7 +12,7 @@ async function startServer() {
 
   server.listen(PORT, () => {
     console.log(`Listening on port ${PORT}...`);
-    console.log(`Go to http://localhost:8000/v1/users`)
+    console.log(`The base URL is: http://localhost:8000/v1/`)
   });
 }
 

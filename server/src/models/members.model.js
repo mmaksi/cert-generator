@@ -10,7 +10,7 @@ const getAllMembers = async () => {
       }
     );
   } catch (error) {
-    console.error(error);
+    console.error("Cannot get members", error);
   }
 };
 
@@ -29,6 +29,7 @@ const getOneMemberById = async ({id}) => {
   }
 };
 
+// TODO: capitalize first letter of firstName and lastName from the front end.
 const getOneMemberByName = async (queriedMember) => {
   // const firstName = member.firstName.toLowerCase();
   // const lastName = member.lastName.toLowerCase();
@@ -54,10 +55,9 @@ const saveMember = async (member) => {
     membersDatabase.findOne(
       {
         firstName: newMember.firstName,
-        middleName: newMember.middleName,
         lastName: newMember.lastName,
       },
-      (err, existingMember) => {
+      (_, existingMember) => {
         if (!existingMember) {
           return newMember.save();
         }
@@ -71,9 +71,12 @@ const saveMember = async (member) => {
 const editMember = async (updatedMemberFields) => {
   const { memberId } = updatedMemberFields;
 
+  const updatedMember = await getOneMemberById({id: memberId}) 
+  if (!updatedMember) {
+    throw new Error("The requested member does not exist")
+  }  
   const filter = { memberId };
   const update = { ...updatedMemberFields };
-  console.log(filter)
   // Find a document with specified memberId and update with all provided values
   try {
     return await membersDatabase.findOneAndUpdate(filter, update);

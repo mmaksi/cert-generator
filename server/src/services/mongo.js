@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const path = require("path")
-require('dotenv').config({path: path.join("..", ".env")});
+require('dotenv').config();
+// {path: path.join("..", ".env")}
 const MONGO_URL = process.env.MONGO_URL
 
 mongoose.connection.once('open', () => {

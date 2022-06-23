@@ -6,10 +6,10 @@ const {
 
 const httpRegisterAdmin = async (req, res) => {
   const admin = req.body;
-  if (!admin.userName || !admin.password) {
+  if (!admin.username || !admin.password) {
     return res
       .status(400)
-      .json({ message: "either userName or password fields are missing" });
+      .json({ message: "either username or password fields are missing" });
   } else {
     const existedAdmin = await findAdminByName(admin);
     if (!existedAdmin) {
@@ -25,10 +25,10 @@ const httpRegisterAdmin = async (req, res) => {
 
 const httpSignInAdmin = async (req, res) => {
   const admin = req.body;
-  if (!admin.userName || !admin.password) {
+  if (!admin.username || !admin.password) {
     return res
       .status(400)
-      .json({ message: "either userName or password fields are missing" });
+      .json({ message: "either username or password fields are missing" });
   } else {
     const isAuthorized = await signInAdmin(admin);
     if (isAuthorized) {
