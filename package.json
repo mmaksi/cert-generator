@@ -7,7 +7,7 @@
   "description": "focalX Certification Generator Dashboard",
   "main": "index.js",
   "scripts": {
-    "start": "node src/server.js",
+    "start": "node server/src/server.js",
     "install-server": "npm install --prefix server",
     "install": "npm run install-server",
     "server": "npm run watch --prefix server"
