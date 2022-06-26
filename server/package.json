@@ -2,6 +2,9 @@
   "name": "cert-generator-api",
   "version": "1.0.0",
   "description": "dashboard API",
+  "engines": {
+    "node": "14.17.6"
+  },
   "main": "server.js",
   "scripts": {
     "watch": "nodemon src/server.js",
@@ -14,9 +17,6 @@
   },
   "author": "Mark Maksi",
   "license": "ISC",
-  "engines": {
-    "node": "14.17.6"
-  },
   "bugs": {
     "url": "https://github.com/markmaksi74/certification-generator-dashboard/issues"
   },

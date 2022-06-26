@@ -1,9 +1,13 @@
 {
   "name": "certification-generator-dashboard",
   "version": "1.0.0",
+  "engines": {
+    "node": "16.x"
+  },
   "description": "focalX Certification Generator Dashboard",
   "main": "index.js",
   "scripts": {
+    "start": "node src/server.js",
     "install-server": "npm install --prefix server",
     "install-client": "npm install --prefix client",
     "install": "npm run install-server && npm run install-client",
