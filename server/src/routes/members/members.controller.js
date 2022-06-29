@@ -8,17 +8,23 @@ const {
 } = require("../../models/members.model");
 
 const httpGetAllMembers = async (req, res) => {
-  return res.status(200).json(await getAllMembers());
+  const allMembers = await getAllMembers()
+  return res.status(200).json(allMembers);
 };
 
 const httpGetOneMemberById = async ({ params }, res) => {
-  return res.status(200).json(await getOneMemberById(params));
+  const memberById = await getOneMemberById(params);
+  if (memberById === null) return res.status(404).json({error: "member not found"});
+  return res.status(200).json(memberById);
 };
 
 const httpGetOneMemberByName = async ({query: queriedMember}, res) => {
   let { firstName, lastName } = queriedMember
-  if (firstName && lastName) {    
-    return res.status(200).json(await getOneMemberByName(queriedMember));
+
+  if (firstName && lastName) {
+    const memberByQueryParams = await getOneMemberByName(queriedMember)
+    if (memberByQueryParams === null) return res.status(404).json({error: "member not found"});
+    return res.status(200).json(memberByQueryParams);
   }
   return res.status(400).json({ error: "firstName or lastName queries are missed" });
 }

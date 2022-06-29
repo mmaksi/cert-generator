@@ -17,13 +17,14 @@ const getAllMembers = async () => {
 const getOneMemberById = async ({id}) => {
   const filter = { memberId: id }
   try {
-    return await membersDatabase.findOne(
+    const memberById = await membersDatabase.findOne(
       filter,
       {
         _id: 0,
         __v: 0,
       }
     );
+    return memberById
   } catch (error) {
     console.error(error);
   }
@@ -39,10 +40,11 @@ const getOneMemberByName = async (queriedMember) => {
   // // make firstName and lastName values lowercase for easy filtering and searching
   // const lowerMember = { firstName, lastName, memberWithoutFirstNameLastName };
   try {
-    return await membersDatabase.findOne(queriedMember, {
+    const memberByQueryParams = await membersDatabase.findOne(queriedMember, {
       _id: 0,
       __v: 0,
     });
+    return memberByQueryParams
   } catch (error) {
     console.error(error);
   }
