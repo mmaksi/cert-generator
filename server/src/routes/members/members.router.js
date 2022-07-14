@@ -1,5 +1,5 @@
 const express = require('express');
-
+const jwt = require("jsonwebtoken");
 const {
   httpAddNewMember,
   httpEditMember,
@@ -13,10 +13,9 @@ const membersRouter = express.Router();
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
-  if (token == null) return res.status(401).json({ error: "no authentication header" });
+  if (!token) return res.status(401).json({ error: "no authorization header" });
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, user) => {
-    console.log(user)
+  jwt.verify(token, process.env.JWT_SECRET_KEY, (error, user) => {
     if (error) return res.status(403).json(error);
     req.user = user;
     next();

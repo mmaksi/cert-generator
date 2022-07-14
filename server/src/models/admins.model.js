@@ -31,7 +31,7 @@ const authenticateUser = async (user) => {
 const authorizeUser = (userToAuthorize) => {
   const { username, password: signInPassword } = userToAuthorize;
 
-  const user = { user: username };
+  const user = { role: username };
   const ACCESS_TOKEN = jwt.sign(user, process.env.JWT_SECRET_KEY);
 
   return ACCESS_TOKEN;

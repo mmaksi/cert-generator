@@ -8,28 +8,32 @@ const {
 } = require("../../models/members.model");
 
 const httpGetAllMembers = async (req, res) => {
-  const allMembers = await getAllMembers()
+  const allMembers = await getAllMembers();
   return res.status(200).json(allMembers);
 };
 
 const httpGetOneMemberById = async ({ params }, res) => {
   const memberById = await getOneMemberById(params);
-  if (memberById === null) return res.status(404).json({error: "member not found"});
+  if (memberById === null)
+    return res.status(404).json({ error: "member not found" });
   return res.status(200).json(memberById);
 };
 
-const httpGetOneMemberByName = async ({query: queriedMember}, res) => {
-  let { firstName, lastName } = queriedMember
+const httpGetOneMemberByName = async ({ query: queriedMember }, res) => {
+  let { firstName, lastName } = queriedMember;
 
   if (firstName && lastName) {
-    const memberByQueryParams = await getOneMemberByName(queriedMember)
-    if (memberByQueryParams === null) return res.status(404).json({error: "member not found"});
+    const memberByQueryParams = await getOneMemberByName(queriedMember);
+    if (memberByQueryParams === null)
+      return res.status(404).json({ error: "member not found" });
     return res.status(200).json(memberByQueryParams);
   }
-  return res.status(400).json({ error: "firstName or lastName queries are missed" });
-}
+  return res
+    .status(400)
+    .json({ error: "firstName or lastName queries are missed" });
+};
 
-const httpAddNewMember = async ({body: member}, res) => {
+const httpAddNewMember = async ({ body: member, user }, res) => {
   if (
     !member.generatedId ||
     !member.firstName ||
@@ -49,10 +53,12 @@ const httpAddNewMember = async ({body: member}, res) => {
   ) {
     return res.status(400).json({ error: "required data is missing" });
   } else {
-    const memberId = uuidv4();
-    member = { memberId, ...member };
-    await saveMember(member);
-    return res.status(201).json(member);
+    if (user.user === "admin") {
+      const memberId = uuidv4();
+      member = { memberId, ...member };
+      await saveMember(member);
+      return res.status(201).json(member);
+    }
   }
 };
 
@@ -77,6 +83,7 @@ const httpEditMember = async (req, res) => {
   ) {
     return res.status(400).json({ error: "required data is missing" });
   } else {
+    if (user.user === "admin")
     await editMember(updatedMember);
     return res.status(201).json(updatedMember);
   }
@@ -89,4 +96,3 @@ module.exports = {
   httpAddNewMember,
   httpEditMember,
 };
-
