@@ -5,6 +5,6 @@ const { httpRegisterAdmin, httpSignInAdmin } = require("./auth.controller");
 const authRouter = express.Router();
 
 // authRouter.post("/register", httpRegisterAdmin);
-authRouter.post("/signin", httpSignInAdmin);
+authRouter.get("/signin", httpSignInAdmin);
 
 module.exports = authRouter;
