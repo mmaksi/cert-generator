@@ -2,14 +2,14 @@ const {
   findAdminByName,
   registerAdmin,
   signInAdmin,
+  authenticateUser,
+  authorizeUser
 } = require("../../models/admins.model");
 
 const httpRegisterAdmin = async (req, res) => {
   const admin = req.body;
   if (!admin.username || !admin.password) {
-    return res
-      .status(400)
-      .json({ error: "required fields are missing" });
+    return res.status(400).json({ error: "required fields are missing" });
   } else {
     const existedAdmin = await findAdminByName(admin);
     if (!existedAdmin) {
@@ -25,17 +25,20 @@ const httpRegisterAdmin = async (req, res) => {
 
 const httpSignInAdmin = async (req, res) => {
   const admin = req.body;
-  if (!admin.username || !admin.password) {
-    return res
-      .status(400)
-      .json({ error: "required fields are missing" });
-  } else {
-    const isAuthorized = await signInAdmin(admin);
-    if (isAuthorized) {
-      return res.status(200).json({ message: "authorized" });
-    }
-    return res.status(401).json({ error: "unauthorized" });
+  const { username, password } = admin;
+  // checking the validity of admin object keys
+  if (!username || !password)
+    return res.status(400).json({ error: "required fields are missing" });
+
+  // checking authentication
+  const isAuthenticated = await authenticateUser(admin)
+
+  // authorization
+  if (isAuthenticated) {
+    const jwtAccessToken = authorizeUser(admin)
+    return res.status(200).json({token: jwtAccessToken});
   }
+  return res.status(401).json({ error: "wrong username or password" })
 };
 
 module.exports = { httpRegisterAdmin, httpSignInAdmin };

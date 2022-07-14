@@ -1,5 +1,6 @@
 const adminsDatabase = require("./admins.mongo");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const salt = bcrypt.genSaltSync(10);
 
 const findAdminByName = async (admin) => {
@@ -13,30 +14,28 @@ const registerAdmin = async (admin) => {
   return await adminsDatabase.create([{ username, password: hashedPassword }]);
 };
 
-const signInAdmin = async (admin) => {
-  const signInPassword = admin.password;
-  let existedAdmin = await findAdminByName(admin);
-
-  if (existedAdmin === null) {
-    existedAdmin = {
-      username: ".",
-      password: ".",
-    };
-  }
-
-  const existedHashedPassword = existedAdmin.password;
-
+const authenticateUser = async (user) => {
+  const { username, password: signInPassword } = user;
+  // authenticate by querying the DB by name
+  let existedAdmin = await findAdminByName(user);
+  // authenticate password
+  const existedHashedPassword = existedAdmin ? existedAdmin.password : "";
   const passwordIsMatched = checkMatchingPasswords(
     signInPassword,
     existedHashedPassword
   );
+  if (existedAdmin && passwordIsMatched) return true
+  return false
+}
 
-  if (existedAdmin === null || !passwordIsMatched) {
-    return false;
-  } else {
-    return true;
-  }
-};
+const authorizeUser = (userToAuthorize) => {
+  const { username, password: signInPassword } = userToAuthorize;
+
+  const user = { user: username };
+  const ACCESS_TOKEN = jwt.sign(user, process.env.JWT_SECRET_KEY);
+
+  return ACCESS_TOKEN;
+}
 
 /* Implementation details */
 const hashPassword = (password) => {
@@ -44,11 +43,13 @@ const hashPassword = (password) => {
   return hashedPassword;
 };
 
-const checkMatchingPasswords = (
-  signInPassword = "",
-  existedHashedPassword = ""
-) => {
+const checkMatchingPasswords = (signInPassword, existedHashedPassword) => {
   return bcrypt.compareSync(signInPassword, existedHashedPassword);
 };
 
-module.exports = { findAdminByName, registerAdmin, signInAdmin };
+module.exports = {
+  findAdminByName,
+  registerAdmin,
+  authenticateUser,
+  authorizeUser,
+};
