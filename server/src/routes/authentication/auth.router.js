@@ -8,6 +8,6 @@ const {
 const authRouter = express.Router();
 
 authRouter.post('/register', httpRegisterAdmin)
-authRouter.get('/signin', httpSignInAdmin)
+authRouter.post('/signin', httpSignInAdmin)
 
 module.exports = authRouter;
