@@ -23,9 +23,9 @@ const authenticateToken = (req, res, next) => {
 };
 
 membersRouter.get('/member', httpGetOneMemberByName)
-membersRouter.get('/', httpGetAllMembers);
 membersRouter.get('/:id', httpGetOneMemberById)
 
+membersRouter.get('/', authenticateToken, httpGetAllMembers);
 membersRouter.post('/', authenticateToken, httpAddNewMember);
 membersRouter.put('/', authenticateToken, httpEditMember)
 
