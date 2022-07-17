@@ -8,26 +8,41 @@ const {
 } = require("../../models/members.model");
 
 const httpGetAllMembers = async (req, res) => {
-  const allMembers = await getAllMembers();
-  return res.status(200).json(allMembers);
+  try {
+    const allMembers = await getAllMembers();
+    return res.status(200).json(allMembers);
+  } catch (error) {
+    return res.status(500).json(error);    
+  }
 };
 
 const httpGetOneMemberById = async ({ params }, res) => {
-  if (params.id) res.status(400).json({ error: "memberId is not specified" });
-  const memberById = await getOneMemberById(params.id);
-  if (memberById === null)
-    return res.status(404).json({ error: "member not found" });
-  return res.status(200).json(memberById);
+  if (params.id) return res.status(400).json({ error: "memberId is not specified" });
+
+  try {
+    const memberById = await getOneMemberById(params.id);
+
+    if (memberById === null)
+      return res.status(404).json({ error: "member not found" });
+    return res.status(200).json(memberById);
+
+  } catch (error) {
+    return res.status(500).json(error);
+  }
 };
 
 const httpGetOneMemberByName = async ({ query: queriedMember }, res) => {
   let { firstName, lastName } = queriedMember;
 
   if (firstName && lastName) {
-    const memberByQueryParams = await getOneMemberByName(queriedMember);
-    if (memberByQueryParams === null)
-      return res.status(404).json({ error: "member not found" });
-    return res.status(200).json(memberByQueryParams);
+    try {
+      const memberByQueryParams = await getOneMemberByName(queriedMember);
+      if (memberByQueryParams === null)
+        return res.status(404).json({ error: "member not found" });
+      return res.status(200).json(memberByQueryParams);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
   }
   return res
     .status(400)
