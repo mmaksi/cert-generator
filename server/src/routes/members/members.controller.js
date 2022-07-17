@@ -17,7 +17,7 @@ const httpGetAllMembers = async (req, res) => {
 };
 
 const httpGetOneMemberById = async ({ params }, res) => {
-  if (params.id) return res.status(400).json({ error: "memberId is not specified" });
+  if (!params.id) return res.status(400).json({ error: "memberId is not specified" });
 
   try {
     const memberById = await getOneMemberById(params.id);
