@@ -1,3 +1,5 @@
+const asyncHandler = require('express-async-handler')
+
 const membersDatabase = require("./members.mongo");
 
 const getAllMembers = async () => {
@@ -14,7 +16,7 @@ const getAllMembers = async () => {
   }
 };
 
-const getOneMemberById = async ({id}) => {
+const getOneMemberById = async (id) => {
   const filter = { memberId: id }
   try {
     const memberById = await membersDatabase.findOne(
@@ -52,6 +54,7 @@ const getOneMemberByName = async (queriedMember) => {
 
 const saveMember = async (member) => {
   const newMember = new membersDatabase({ ...member });
+  const alreadyFound = { error: "member already found" }
   // Save the document only if the member does not already exist in the database
   try {
     membersDatabase.findOne(

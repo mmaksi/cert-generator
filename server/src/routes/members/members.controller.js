@@ -13,7 +13,8 @@ const httpGetAllMembers = async (req, res) => {
 };
 
 const httpGetOneMemberById = async ({ params }, res) => {
-  const memberById = await getOneMemberById(params);
+  if (params.id) res.status(400).json({ error: "memberId is not specified" });
+  const memberById = await getOneMemberById(params.id);
   if (memberById === null)
     return res.status(404).json({ error: "member not found" });
   return res.status(200).json(memberById);
@@ -30,12 +31,11 @@ const httpGetOneMemberByName = async ({ query: queriedMember }, res) => {
   }
   return res
     .status(400)
-    .json({ error: "firstName or lastName queries are missed" });
+    .json({ error: "firstName or lastName queries are missing" });
 };
 
 const httpAddNewMember = async ({ body: member, user }, res) => {
   if (
-    !member.generatedId ||
     !member.firstName ||
     !member.lastName ||
     !member.address ||
@@ -55,8 +55,21 @@ const httpAddNewMember = async ({ body: member, user }, res) => {
   } else {
     if (user.user === "admin") {
       const memberId = uuidv4();
-      member = { memberId, ...member };
-      await saveMember(member);
+      const generatedId = uuidv4().split("-")[0];
+      member = { memberId, generatedId, ...member };
+
+      const checkMemberExists = await getOneMemberByName({
+        firstName: member.firstName,
+        lastName: member.lastName,
+      });
+
+      if (checkMemberExists)
+        return res.status(400).json({ error: "member already exists" });
+      try {
+        await saveMember(member);
+      } catch (error) {
+        return res.status(500).json(error);
+      }
       return res.status(201).json(member);
     }
   }
@@ -83,8 +96,7 @@ const httpEditMember = async (req, res) => {
   ) {
     return res.status(400).json({ error: "required data is missing" });
   } else {
-    if (user.user === "admin")
-    await editMember(updatedMember);
+    if (user.user === "admin") await editMember(updatedMember);
     return res.status(201).json(updatedMember);
   }
 };

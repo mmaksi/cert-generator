@@ -4,6 +4,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 
 const api = require("./routes/api");
+const { errorHandler } = require("./middlewares/error.middlewares");
 
 const app = express();
 
@@ -19,5 +20,6 @@ app.use(morgan("combined"));
 
 // http://localhost:8000/v1/users
 app.use("/v1", api);
+app.use(errorHandler);
 
 module.exports = app;
