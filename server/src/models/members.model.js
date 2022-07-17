@@ -75,11 +75,7 @@ const saveMember = async (member) => {
 
 const editMember = async (updatedMemberFields) => {
   const { memberId } = updatedMemberFields;
-
-  const updatedMember = await getOneMemberById({id: memberId}) 
-  if (!updatedMember) {
-    throw new Error("The requested member does not exist")
-  }  
+ 
   const filter = { memberId };
   const update = { ...updatedMemberFields };
   // Find a document with specified memberId and update with all provided values

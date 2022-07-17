@@ -111,8 +111,12 @@ const httpEditMember = async (req, res) => {
   ) {
     return res.status(400).json({ error: "required data is missing" });
   } else {
-    if (user.user === "admin") await editMember(updatedMember);
-    return res.status(201).json(updatedMember);
+    const requestedMember = await getOneMemberById(updatedMember.memberId) 
+    if (requestedMember) {
+      await editMember(updatedMember);
+      return res.status(201).json(updatedMember);
+    }
+    return res.status(404).json({ error: "requested member does not exist" });
   }
 };
 
